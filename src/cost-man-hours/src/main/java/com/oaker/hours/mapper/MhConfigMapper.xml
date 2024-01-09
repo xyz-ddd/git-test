@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.MhConfigMapper">
+
+<!--    <resultMap type="MhConfig" id="MhConfigResult">-->
+<!--        <id     property="ld"      column="id"      />-->
+<!--        <result property="configValue"   column="config_value"   />-->
+<!--        <result property="configType"    column="config_type"    />-->
+<!--        <result property="updateBy"      column="update_by"      />-->
+<!--        <result property="updateTime"    column="update_time"    />-->
+<!--    </resultMap>-->
+
+    <sql id="selectConfigVo">
+        select id, config_key, config_value, update_by, update_time
+        from mh_config
+    </sql>
+
+
+    <update id="updateConfig" parameterType="MhConfig"  >
+        update mh_config
+        <set>
+            <if test="configKey != null and configKey != ''">config_key = #{configKey},</if>
+            <if test="configValue != null and configValue != ''">config_value = #{configValue},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="selectConfigList"  resultType="MhConfig">
+        <include refid="selectConfigVo"/>
+<!--        <where>-->
+<!--            <if test="configKey != null and configKey != ''">-->
+<!--                AND config_key like concat('%', #{configKey}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
+
+    <select id="selectByKey" parameterType="String" resultType="MhConfig">
+        <include refid="selectConfigVo"/>
+            where  config_key = #{keyName};
+    </select>
+</mapper>
